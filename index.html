@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Travel Light, Travel Right! — Team Kernel Crew</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,700;9..144,900&family=JetBrains+Mono:wght@400;500;700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #f5f1e8;       /* warm paper */
+    --paper-2: #ece6d4;
+    --ink: #1a1a1a;
+    --ink-2: #3d3d3d;
+    --muted: #6b6660;
+    --line: #d9d2bf;
+    --accent: #c8451c;      /* terracotta */
+    --accent-2: #0a3d62;    /* deep rail blue */
+    --accent-3: #e8a317;    /* signal yellow */
+    --shadow: 0 1px 0 rgba(0,0,0,0.04), 0 12px 40px -12px rgba(40,30,15,0.18);
+  }
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin: 0; background: var(--paper);
+    color: var(--ink);
+    font-family: 'Manrope', system-ui, sans-serif;
+    font-size: 16px; line-height: 1.65;
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(0,0,0,0.05) 1px, transparent 0);
+    background-size: 24px 24px;
+  }
+  a{ color: inherit; text-decoration: none; }
+  img{ max-width: 100%; display: block; }
+  .container{ max-width: 1180px; margin: 0 auto; padding: 0 28px; }
+
+  /* Typography */
+  h1, h2, h3, h4{ font-family: 'Fraunces', Georgia, serif; font-weight: 700; letter-spacing: -0.015em; line-height: 1.1; color: var(--ink); margin: 0; }
+  .mono{ font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; }
+
+  /* Progress bar */
+  .progress{
+    position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-3));
+    z-index: 100; transition: width 0.1s;
+  }
+
+  /* NAV */
+  .nav{
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(245,241,232,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner{
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 28px; max-width: 1280px; margin: 0 auto;
+  }
+  .brand{ display: flex; align-items: center; gap: 12px; }
+  .brand-mark{
+    width: 36px; height: 36px; border-radius: 8px;
+    background: var(--ink);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--paper); font-family: 'Fraunces'; font-weight: 900; font-size: 18px;
+  }
+  .brand-text{ font-family: 'Fraunces'; font-weight: 700; font-size: 17px; }
+  .brand-text small{ display: block; font-family: 'JetBrains Mono'; font-size: 9px; letter-spacing: 0.22em; color: var(--muted); text-transform: uppercase; font-weight: 500; margin-top: 2px; }
+  .nav-links{ display: flex; gap: 24px; font-size: 13px; font-weight: 500; }
+  .nav-links a{ color: var(--ink-2); transition: color .2s; position: relative; }
+  .nav-links a:hover{ color: var(--accent); }
+  @media (max-width: 900px){ .nav-links{ display: none; } }
+
+  /* HERO */
+  .hero{ padding: 80px 0 60px; position: relative; }
+  .hero-grid{ display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+  @media (max-width: 900px){ .hero-grid{ grid-template-columns: 1fr; gap: 40px; } }
+  .hero .tag-row{ display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+  .tag{
+    padding: 6px 12px; border: 1px solid var(--line); border-radius: 4px;
+    background: var(--paper-2);
+    font-family: 'JetBrains Mono'; font-size: 10px; letter-spacing: 0.15em;
+    text-transform: uppercase; font-weight: 500;
+  }
+  .hero h1{
+    font-size: clamp(48px, 7vw, 88px);
+    font-weight: 900;
+    margin-bottom: 24px;
+  }
+  .hero h1 em{ font-style: italic; color: var(--accent); font-weight: 400; }
+  .hero p{ font-size: 19px; color: var(--ink-2); margin-bottom: 32px; max-width: 540px; }
+  .hero-cta{ display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+  .btn{
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 22px; border-radius: 6px;
+    font-weight: 600; font-size: 14px; transition: all .2s;
+  }
+  .btn-primary{ background: var(--ink); color: var(--paper); }
+  .btn-primary:hover{ background: var(--accent); transform: translateY(-2px); }
+  .btn-ghost{ border: 1.5px solid var(--ink); color: var(--ink); }
+  .btn-ghost:hover{ background: var(--ink); color: var(--paper); }
+
+  /* Hero ticket card */
+  .ticket{
+    background: var(--paper-2);
+    border: 1.5px solid var(--ink);
+    border-radius: 14px;
+    padding: 32px;
+    box-shadow: var(--shadow);
+    position: relative;
+    transform: rotate(-1.2deg);
+  }
+  .ticket:hover{ transform: rotate(0); transition: transform .4s; }
+  .ticket::before, .ticket::after{
+    content: ''; position: absolute; width: 24px; height: 24px;
+    border-radius: 50%; background: var(--paper); border: 1.5px solid var(--ink);
+    top: 50%; transform: translateY(-50%);
+  }
+  .ticket::before{ left: -13px; }
+  .ticket::after{ right: -13px; }
+  .ticket-header{ display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 18px; border-bottom: 2px dashed var(--line); }
+  .ticket-header .label{ font-family: 'JetBrains Mono'; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .ticket-header .value{ font-family: 'Fraunces'; font-size: 22px; font-weight: 700; margin-top: 4px; }
+  .ticket-route{ display: flex; align-items: center; justify-content: space-between; padding: 20px 0; }
+  .ticket-route .stop{ text-align: center; }
+  .ticket-route .stop .code{ font-family: 'Fraunces'; font-size: 38px; font-weight: 900; }
+  .ticket-route .stop .name{ font-family: 'JetBrains Mono'; font-size: 10px; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; }
+  .ticket-route .arrow{ color: var(--accent); font-size: 28px; }
+  .ticket-bottom{ padding-top: 18px; border-top: 2px dashed var(--line); display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .ticket-bottom .cell .lbl{ font-family: 'JetBrains Mono'; font-size: 9px; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; }
+  .ticket-bottom .cell .val{ font-family: 'Fraunces'; font-size: 16px; font-weight: 700; margin-top: 2px; }
+
+  /* Section base */
+  section{ padding: 100px 0; border-top: 1px solid var(--line); position: relative; }
+  .section-header{ display: grid; grid-template-columns: 80px 1fr; gap: 40px; margin-bottom: 60px; align-items: start; }
+  @media (max-width: 700px){ .section-header{ grid-template-columns: 1fr; gap: 8px; } }
+  .section-num{
+    font-family: 'Fraunces'; font-size: 56px; font-weight: 900;
+    color: var(--accent); line-height: 1; font-style: italic;
+  }
+  .section-header h2{ font-size: clamp(32px, 4.5vw, 52px); margin-bottom: 14px; font-weight: 700; }
+  .section-header .lede{ font-size: 18px; color: var(--ink-2); max-width: 760px; }
+  .eyebrow{
+    font-family: 'JetBrains Mono'; font-size: 11px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--accent); font-weight: 600; margin-bottom: 14px;
+  }
+
+  /* Grid */
+  .grid{ display: grid; gap: 22px; }
+  .grid-2{ grid-template-columns: repeat(2, 1fr); }
+  .grid-3{ grid-template-columns: repeat(3, 1fr); }
+  .grid-4{ grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 900px){
+    .grid-2, .grid-3, .grid-4{ grid-template-columns: 1fr; }
+  }
+
+  /* Editorial cards */
+  .ed-card{
+    background: var(--paper);
+    border: 1.5px solid var(--ink);
+    border-radius: 8px; padding: 28px;
+    transition: transform .25s, box-shadow .25s;
+    position: relative;
+  }
+  .ed-card:hover{ transform: translate(-3px, -3px); box-shadow: 6px 6px 0 var(--ink); }
+  .ed-card .card-num{
+    font-family: 'JetBrains Mono'; font-size: 11px;
+    letter-spacing: 0.2em; color: var(--accent); margin-bottom: 8px;
+  }
+  .ed-card h3{ font-size: 22px; margin-bottom: 10px; font-weight: 700; }
+  .ed-card p{ color: var(--ink-2); margin: 0; font-size: 15px; }
+  .ed-card.dark{ background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .ed-card.dark h3{ color: var(--paper); }
+  .ed-card.dark p{ color: rgba(245,241,232,0.75); }
+  .ed-card.dark .card-num{ color: var(--accent-3); }
+  .ed-card.dark:hover{ box-shadow: 6px 6px 0 var(--accent); }
+
+  /* Pain & needs */
+  .pain-list{ display: grid; grid-template-columns: repeat(2, 1fr); gap: 0; }
+  @media (max-width: 700px){ .pain-list{ grid-template-columns: 1fr; } }
+  .pain-item{ padding: 26px 22px; border: 1px solid var(--line); border-radius: 0; margin: -0.5px; background: var(--paper); }
+  .pain-item .icon{ font-size: 26px; margin-bottom: 10px; }
+  .pain-item h4{ font-size: 18px; margin-bottom: 6px; }
+  .pain-item p{ color: var(--muted); margin: 0; font-size: 14.5px; }
+
+  /* 5 whys */
+  .why-chain{ position: relative; padding-left: 40px; }
+  .why-chain::before{
+    content: ''; position: absolute; left: 14px; top: 12px; bottom: 12px;
+    width: 2px; background: var(--accent); opacity: 0.4;
+  }
+  .why-item{
+    position: relative; margin-bottom: 22px;
+    background: var(--paper); border: 1.5px solid var(--line);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 8px 8px 0; padding: 22px 26px;
+  }
+  .why-item::before{
+    content: ''; position: absolute; left: -33px; top: 28px;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--accent); border: 3px solid var(--paper);
+  }
+  .why-item .why-num{
+    font-family: 'JetBrains Mono'; font-size: 11px;
+    letter-spacing: 0.2em; color: var(--accent); font-weight: 700;
+  }
+  .why-item h3{ font-size: 20px; margin: 6px 0 8px; }
+
+  /* HMW */
+  .hmw-box{
+    background: var(--ink); color: var(--paper);
+    padding: 36px; border-radius: 12px; margin-bottom: 32px;
+    position: relative; overflow: hidden;
+  }
+  .hmw-box::before{
+    content: '"'; position: absolute; top: -30px; right: 20px;
+    font-family: 'Fraunces'; font-size: 220px; font-weight: 900;
+    color: var(--accent); opacity: 0.4; line-height: 1;
+  }
+  .hmw-box .label{ font-family: 'JetBrains Mono'; font-size: 11px; letter-spacing: 0.2em; color: var(--accent-3); margin-bottom: 12px; }
+  .hmw-box h3{ color: var(--paper); font-size: 26px; font-weight: 500; font-style: italic; max-width: 700px; position: relative; z-index: 1; }
+  .hmw-row{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  @media (max-width: 900px){ .hmw-row{ grid-template-columns: 1fr; } }
+  .hmw-mini{
+    border: 1.5px solid var(--ink); padding: 22px; border-radius: 8px; background: var(--paper);
+  }
+  .hmw-mini .n{ font-family: 'Fraunces'; font-size: 36px; font-weight: 900; color: var(--accent); line-height: 1; font-style: italic; }
+  .hmw-mini h4{ font-size: 17px; margin: 8px 0 6px; }
+  .hmw-mini p{ font-size: 14px; color: var(--ink-2); margin: 0; }
+
+  /* Ideas */
+  .idea-stack{ display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; }
+  @media (max-width: 900px){ .idea-stack{ grid-template-columns: 1fr; } }
+  .idea{ border: 1.5px solid var(--ink); padding: 30px; border-radius: 8px; background: var(--paper); position: relative; }
+  .idea.winning{ background: var(--accent); color: var(--paper); border-color: var(--accent); }
+  .idea.winning h3, .idea.winning p, .idea.winning .idea-num{ color: var(--paper); }
+  .idea .idea-num{ font-family: 'JetBrains Mono'; font-size: 11px; letter-spacing: 0.2em; color: var(--accent); margin-bottom: 8px; }
+  .idea h3{ font-size: 24px; margin-bottom: 12px; }
+  .idea p{ color: var(--ink-2); font-size: 15.5px; margin: 0; }
+  .idea .badge{
+    position: absolute; top: -12px; right: 22px;
+    background: var(--ink); color: var(--accent-3); padding: 6px 14px;
+    border-radius: 4px; font-family: 'JetBrains Mono'; font-size: 10px; letter-spacing: 0.2em; font-weight: 700;
+  }
+
+  /* Flow / prototype */
+  .flow-grid{ display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+  @media (max-width: 900px){ .flow-grid{ grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px){ .flow-grid{ grid-template-columns: 1fr; } }
+  .flow-step{
+    background: var(--paper); border-right: 1px solid var(--line); padding: 30px 24px;
+    position: relative;
+  }
+  .flow-step:last-child{ border-right: none; }
+  @media (max-width: 900px){ .flow-step{ border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); } }
+  .flow-step .step-num{
+    font-family: 'Fraunces'; font-size: 64px; font-weight: 900;
+    color: var(--accent); line-height: 1; font-style: italic; opacity: 0.85;
+  }
+  .flow-step h4{ font-size: 18px; margin: 12px 0 8px; }
+  .flow-step p{ font-size: 14px; color: var(--muted); margin: 0; }
+
+  /* QR section */
+  .qr-band{
+    background: var(--ink); color: var(--paper);
+    border-radius: 16px; padding: 50px;
+    display: grid; grid-template-columns: 1fr 280px; gap: 50px; align-items: center;
+  }
+  @media (max-width: 900px){ .qr-band{ grid-template-columns: 1fr; gap: 30px; padding: 36px; } }
+  .qr-band h2{ color: var(--paper); font-size: 40px; margin-bottom: 16px; }
+  .qr-band p{ color: rgba(245,241,232,0.8); font-size: 17px; margin-bottom: 24px; }
+  .qr-band .eyebrow{ color: var(--accent-3); }
+  .qr-frame{
+    background: var(--paper); padding: 20px; border-radius: 12px;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+  }
+  .qr-frame img{ width: 240px; height: 240px; }
+  .qr-frame .caption{ font-family: 'JetBrains Mono'; font-size: 10px; color: var(--ink); letter-spacing: 0.2em; text-transform: uppercase; }
+  .yt-btn{
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--accent); color: var(--paper);
+    padding: 14px 22px; border-radius: 6px;
+    font-weight: 600; font-size: 14px; transition: all .2s;
+  }
+  .yt-btn:hover{ background: var(--paper); color: var(--ink); }
+  .yt-btn svg{ width: 18px; height: 18px; }
+
+  /* Team */
+  .team-wrap{ display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  @media (max-width: 900px){ .team-wrap{ grid-template-columns: repeat(2, 1fr); } }
+  .member{
+    text-align: left; padding: 22px;
+    background: var(--paper); border: 1.5px solid var(--line);
+    border-radius: 8px; transition: all .25s;
+  }
+  .member:hover{ border-color: var(--accent); transform: translateY(-3px); box-shadow: var(--shadow); }
+  .member .avatar{
+    width: 52px; height: 52px; border-radius: 8px;
+    background: var(--ink); color: var(--paper);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces'; font-weight: 700; font-size: 18px;
+    margin-bottom: 14px;
+  }
+  .member .name{ font-family: 'Fraunces'; font-weight: 700; font-size: 17px; }
+  .member .id{ font-family: 'JetBrains Mono'; font-size: 10px; color: var(--muted); letter-spacing: 0.1em; margin-top: 2px; }
+  .mentor-card{
+    grid-column: span 4;
+    background: var(--ink); color: var(--paper);
+    border-radius: 10px; padding: 30px;
+    display: flex; align-items: center; gap: 24px;
+    margin-top: 14px;
+  }
+  @media (max-width: 900px){ .mentor-card{ grid-column: span 2; flex-direction: column; text-align: center; } }
+  .mentor-card .avatar{ background: var(--accent); color: var(--paper); width: 64px; height: 64px; font-size: 22px; margin: 0; flex-shrink: 0; }
+  .mentor-card .label{ font-family: 'JetBrains Mono'; font-size: 11px; letter-spacing: 0.2em; color: var(--accent-3); text-transform: uppercase; }
+  .mentor-card .name{ font-family: 'Fraunces'; font-size: 30px; font-weight: 700; margin-top: 4px; }
+  .mentor-card .role{ color: rgba(245,241,232,0.7); margin-top: 4px; }
+
+  /* Footer */
+  footer{
+    background: var(--ink); color: var(--paper);
+    padding: 60px 0 40px;
+    border-top: 1px solid var(--ink);
+  }
+  footer .container{ display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; }
+  @media (max-width: 700px){ footer .container{ grid-template-columns: 1fr; } }
+  footer h4{ color: var(--accent-3); font-family: 'JetBrains Mono'; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; margin-bottom: 14px; font-weight: 600; }
+  footer p, footer a{ color: rgba(245,241,232,0.7); font-size: 14px; }
+  footer .big-title{ font-family: 'Fraunces'; font-size: 28px; font-weight: 700; color: var(--paper); }
+  footer .copy{ margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(245,241,232,0.15); font-size: 12px; color: rgba(245,241,232,0.5); text-align: center; }
+
+  /* Reveal */
+  .reveal{ opacity: 0; transform: translateY(20px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in{ opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="brand">
+      <div class="brand-mark">KC</div>
+      <div class="brand-text">Kernel Crew<small>Design Thinking · 2026</small></div>
+    </div>
+    <div class="nav-links">
+      <a href="#user">User</a>
+      <a href="#context">Context</a>
+      <a href="#evidence">Evidence</a>
+      <a href="#pain">Pain Points</a>
+      <a href="#root">Root Cause</a>
+      <a href="#hmw">HMW</a>
+      <a href="#ideas">Ideas</a>
+      <a href="#prototype">Prototype</a>
+      <a href="#video">Video</a>
+      <a href="#team">Team</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="tag-row">
+          <span class="tag">Design Thinking · 2026</span>
+          <span class="tag">B.Tech · 2nd Year</span>
+          <span class="tag">Mahindra University</span>
+        </div>
+        <h1>Travel <em>light</em>,<br/>travel <em>right</em>.</h1>
+        <p>A design-thinking proposal to reclaim the wasted overhead space inside Indian Railway coaches — clearing aisles, easing mobility, and giving every passenger's luggage a safe, visible home.</p>
+        <div class="hero-cta">
+          <a href="#prototype" class="btn btn-primary">See the prototype →</a>
+          <a href="#video" class="btn btn-ghost">Watch demo</a>
+        </div>
+      </div>
+      <div class="ticket">
+        <div class="ticket-header">
+          <div>
+            <div class="label">Operator</div>
+            <div class="value">Indian Railways</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="label">Coach</div>
+            <div class="value">SE / 2A</div>
+          </div>
+        </div>
+        <div class="ticket-route">
+          <div class="stop">
+            <div class="code">HYB</div>
+            <div class="name">Hyderabad</div>
+          </div>
+          <div class="arrow">→</div>
+          <div class="stop">
+            <div class="code">SOL</div>
+            <div class="name">Solution</div>
+          </div>
+        </div>
+        <div class="ticket-bottom">
+          <div class="cell"><div class="lbl">Team</div><div class="val">Kernel Crew</div></div>
+          <div class="cell"><div class="lbl">Members</div><div class="val">7</div></div>
+          <div class="cell"><div class="lbl">Mentor</div><div class="val">Abhishek</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- USER -->
+<section id="user">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">01</div>
+      <div>
+        <div class="eyebrow">User / Protagonist</div>
+        <h2>The everyday traveler.</h2>
+        <p class="lede">Millions of passengers on Indian Railways — families with children, elderly travelers, students, migrant workers, and long-distance commuters carrying substantial baggage for extended journeys.</p>
+      </div>
+    </div>
+    <div class="grid grid-2">
+      <div class="ed-card">
+        <div class="card-num">— Their struggle</div>
+        <h3>Where does the luggage go?</h3>
+        <p>Bags blocking walkways, overcrowded seating, unsafe luggage placement, difficult movement around the coach, and a constantly higher risk of theft and damage to belongings.</p>
+      </div>
+      <div class="ed-card dark">
+        <div class="card-num">— The quote</div>
+        <h3 style="font-style: italic; font-weight: 400;">"Passengers book seats… but where does the luggage go?"</h3>
+        <p style="margin-top: 14px;">The question that started everything.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTEXT -->
+<section id="context">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">02</div>
+      <div>
+        <div class="eyebrow">Context & Situation</div>
+        <h2>The setting.</h2>
+        <p class="lede">Indian Railways is one of the world's busiest networks, serving as the primary mode of long-distance transport for millions of people daily — yet its luggage infrastructure hasn't evolved with modern travel.</p>
+      </div>
+    </div>
+    <div class="grid grid-3">
+      <div class="ed-card">
+        <div class="card-num">— 01</div>
+        <h3>The current reality</h3>
+        <p>Passengers carry substantial luggage for long trips. Designated under-seat storage quickly reaches capacity, forcing excess bags into aisles, doorways, and shared passenger spaces.</p>
+      </div>
+      <div class="ed-card">
+        <div class="card-num">— 02</div>
+        <h3>The missed opportunity</h3>
+        <p>While floor space is heavily congested, significant unutilized vertical overhead space within coaches currently serves no functional purpose at all.</p>
+      </div>
+      <div class="ed-card">
+        <div class="card-num">— 03</div>
+        <h3>The network scale</h3>
+        <p>From overnight sleepers to daytime intercity coaches — non-AC and seating-only coaches are where the luggage problem hits hardest, every single day.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EVIDENCE -->
+<section id="evidence">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">03</div>
+      <div>
+        <div class="eyebrow">Evidence Base</div>
+        <h2>What the data tells us.</h2>
+        <p class="lede">Field observations, passenger behavior studies, and proven design precedents from other transport sectors all point to the same conclusion.</p>
+      </div>
+    </div>
+    <div class="grid grid-2">
+      <div class="ed-card">
+        <div class="card-num">— Finding 01</div>
+        <h3>Passenger & luggage volume</h3>
+        <p>The average long-distance passenger carries 1–2 large bags, consistently exceeding the capacity of traditional under-seat storage in standard coaches.</p>
+      </div>
+      <div class="ed-card">
+        <div class="card-num">— Finding 02</div>
+        <h3>Spatial audit</h3>
+        <p>Visual analysis of standard Indian Railway coaches reveals a significant percentage of unutilized vertical clearance above head level — especially in non-AC and daytime seating coaches.</p>
+      </div>
+      <div class="ed-card">
+        <div class="card-num">— Finding 03</div>
+        <h3>Safety & mobility hazards</h3>
+        <p>Observational data confirms aisle-blocking luggage is a primary cause of restricted mobility for passengers and catering staff, and poses a major tripping hazard.</p>
+      </div>
+      <div class="ed-card">
+        <div class="card-num">— Finding 04</div>
+        <h3>Material precedent</h3>
+        <p>High-strength elastic mesh is already a proven, reliable storage mechanism — successfully utilized in automotive, aerospace, and bus transport to secure heavy loads in transit.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAIN POINTS -->
+<section id="pain">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">04</div>
+      <div>
+        <div class="eyebrow">Pain Points & Needs</div>
+        <h2>What passengers actually feel.</h2>
+        <p class="lede">Through observation and empathy mapping we surfaced four core pain points — and three fundamental needs any solution must address.</p>
+      </div>
+    </div>
+
+    <div class="eyebrow" style="margin-bottom: 18px;">User Pain Points</div>
+    <div class="pain-list">
+      <div class="pain-item"><div class="icon">😣</div><h4>Physical discomfort</h4><p>Zero legroom due to large bags wedged between seats or underfoot.</p></div>
+      <div class="pain-item"><div class="icon">🚶</div><h4>Mobility anxiety</h4><p>Constant stress of navigating blocked, hazardous aisles just to use the washroom.</p></div>
+      <div class="pain-item"><div class="icon">🔒</div><h4>Security concerns</h4><p>Fear of theft when luggage must be left near coach doorways away from the passenger's seat.</p></div>
+      <div class="pain-item"><div class="icon">💪</div><h4>Lifting strain</h4><p>Difficulty hoisting heavy bags into rigid, awkwardly positioned upper berths.</p></div>
+    </div>
+
+    <div class="eyebrow" style="margin: 50px 0 18px;">User Needs</div>
+    <div class="grid grid-3">
+      <div class="ed-card">
+        <div class="card-num">— Need 01</div>
+        <h3>Accessible security</h3>
+        <p>Storage that is within the line of sight and close to the passenger's designated seat.</p>
+      </div>
+      <div class="ed-card">
+        <div class="card-num">— Need 02</div>
+        <h3>Unobstructed floors</h3>
+        <p>A solution that completely removes luggage from the aisle and footwells.</p>
+      </div>
+      <div class="ed-card">
+        <div class="card-num">— Need 03</div>
+        <h3>Effortless organization</h3>
+        <p>A flexible storage mechanism that adapts to different bag shapes without complex packing logic.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROOT CAUSES -->
+<section id="root">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">05</div>
+      <div>
+        <div class="eyebrow">Root Causes · 5 Whys</div>
+        <h2>Why does this persist?</h2>
+        <p class="lede">Layered root-cause analysis — moving from surface symptoms down to the systemic reasons standard coaches still can't handle modern luggage.</p>
+      </div>
+    </div>
+
+    <div class="why-chain">
+      <div class="why-item">
+        <div class="why-num">WHY · 01</div>
+        <h3>Outdated storage infrastructure</h3>
+        <p>Standard coach designs have not evolved to accommodate modern travel behaviors. Under-seat dimensions were designed for smaller, softer bags rather than the large, hard-shell suitcases passengers use today.</p>
+      </div>
+      <div class="why-item">
+        <div class="why-num">WHY · 02</div>
+        <h3>Systemic trust & brake-van avoidance</h3>
+        <p>Passengers deliberately avoid checking bags into the train's separate luggage vans due to fears of theft, damage, or long retrieval delays. They prefer keeping belongings within eyesight.</p>
+      </div>
+      <div class="why-item">
+        <div class="why-num">WHY · 03</div>
+        <h3>Architectural inefficiency</h3>
+        <p>Traditional coach design focuses entirely on floor-level solutions (seating and under-seat space), leaving a massive volume of vertical air space near the ceiling completely unutilized.</p>
+      </div>
+      <div class="why-item">
+        <div class="why-num">WHY · 04</div>
+        <h3>Economic travel patterns</h3>
+        <p>Many long-haul passengers are students or migrant workers traveling for extended periods. This demographic carries heavy, oversized baggage that standard seating areas simply aren't equipped to handle.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HMW -->
+<section id="hmw">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">06</div>
+      <div>
+        <div class="eyebrow">How Might We…?</div>
+        <h2>Reframing the challenge.</h2>
+        <p class="lede">From a tangled problem space to three crisp, designable questions.</p>
+      </div>
+    </div>
+
+    <div class="hmw-box">
+      <div class="label">Core Design Challenge</div>
+      <h3>How might we utilize the wasted vertical space in standard Indian Railway coaches to securely store heavy passenger luggage — so that aisles remain clear and passenger mobility is restored?</h3>
+    </div>
+
+    <div class="hmw-row">
+      <div class="hmw-mini">
+        <div class="n">01</div>
+        <h4>No structural modification</h4>
+        <p>How might we create a secure overhead storage solution that requires absolutely no major structural changes to the existing coach?</p>
+      </div>
+      <div class="hmw-mini">
+        <div class="n">02</div>
+        <h4>Line-of-sight security</h4>
+        <p>How might we ensure luggage stays within the passenger's line of sight to eliminate theft anxiety and the need for separate luggage vans?</p>
+      </div>
+      <div class="hmw-mini">
+        <div class="n">03</div>
+        <h4>Flexible & adaptive</h4>
+        <p>How might we design a holding system flexible enough to accommodate the irregular shapes and large sizes of modern baggage?</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IDEAS -->
+<section id="ideas">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">07</div>
+      <div>
+        <div class="eyebrow">Top Ideas</div>
+        <h2>The solution stack.</h2>
+        <p class="lede">Four interlocking design decisions that together form a complete, retrofittable luggage system for Indian Railway coaches.</p>
+      </div>
+    </div>
+
+    <div class="idea-stack">
+      <div class="idea winning">
+        <span class="badge">Winning Concept</span>
+        <div class="idea-num">— Idea 01</div>
+        <h3>The Elastic Overhead Mesh</h3>
+        <p>Instead of rigid, heavy shelves, we suspend a high-strength flexible elastic net in the unused vertical space. It adapts to irregular luggage shapes while keeping the system extremely lightweight.</p>
+      </div>
+      <div class="idea">
+        <div class="idea-num">— Idea 02</div>
+        <h3>Non-Invasive Mounting</h3>
+        <p>A low-cost installation mechanism using metal hooks and screw fixtures that attach directly to existing coach walls. Zero major structural modifications to the train required.</p>
+      </div>
+      <div class="idea">
+        <div class="idea-num">— Idea 03</div>
+        <h3>Anti-Slip & Sag Prevention</h3>
+        <p>A reinforced plastic band at the front and a structural support wire ("Think Line") ensure the mesh doesn't sag under heavy weight and bags don't slip out during train movement.</p>
+      </div>
+      <div class="idea">
+        <div class="idea-num">— Idea 04</div>
+        <h3>Line-of-Sight Security</h3>
+        <p>Storage is placed directly above the passenger seating areas. Luggage stays constantly visible to its owner, dramatically reducing theft anxiety — no separate luggage van needed.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROTOTYPE -->
+<section id="prototype">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">08</div>
+      <div>
+        <div class="eyebrow">Prototype · Flow Diagram</div>
+        <h2>How it works, step by step.</h2>
+        <p class="lede">From installation to safe transit — the full passenger journey with the Elastic Overhead Mesh.</p>
+      </div>
+    </div>
+
+    <div class="flow-grid" style="border: 1.5px solid var(--ink); border-radius: 10px; overflow: hidden;">
+      <div class="flow-step">
+        <div class="step-num">01</div>
+        <h4>Retrofit installation</h4>
+        <p>High-grade metal hooks are anchored to existing coach walls above seating areas — no structural changes to the train.</p>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">02</div>
+        <h4>Passenger stowage</h4>
+        <p>Upon boarding, passengers lift their large or irregularly shaped baggage into the flexible elastic mesh overhead.</p>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">03</div>
+        <h4>Auto-securing lock</h4>
+        <p>The reinforced front plastic band and anti-slip support wire tension around the luggage, locking it firmly in place.</p>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">04</div>
+        <h4>Safe transit</h4>
+        <p>Luggage stays secure and in direct line of sight. Aisles and footwells remain completely clear for the whole journey.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO / QR -->
+<section id="video">
+  <div class="container">
+    <div class="qr-band">
+      <div>
+        <div class="eyebrow">Product Demo</div>
+        <h2>See the prototype move.</h2>
+        <p>Scan the QR code with your phone camera, or tap the button to open our short YouTube video — a quick walk-through of the Elastic Overhead Mesh: installation, loading, locking, and the final passenger view.</p>
+        <a class="yt-btn" href="https://youtube.com/shorts/Hm_dW4ZidHg?feature=shared" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.546 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          Watch on YouTube
+        </a>
+      </div>
+      <div class="qr-frame">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?data=https%3A%2F%2Fyoutube.com%2Fshorts%2FHm_dW4ZidHg%3Ffeature%3Dshared&size=400x400&margin=10&color=1a1a1a" alt="QR code linking to YouTube product demo" />
+        <div class="caption">Scan to watch</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section id="team">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">09</div>
+      <div>
+        <div class="eyebrow">The people behind it</div>
+        <h2>Team Kernel Crew.</h2>
+        <p class="lede">Seven undergraduate students from Mahindra University — using design thinking to rethink everyday Indian Railway journeys.</p>
+      </div>
+    </div>
+
+    <div class="team-wrap">
+      <div class="member"><div class="avatar">AP</div><div class="name">Abhipsha Pujahari</div><div class="id">SE24UCAM058</div></div>
+      <div class="member"><div class="avatar">SR</div><div class="name">Sparshitha Reddy</div><div class="id">SE24UCAM002</div></div>
+      <div class="member"><div class="avatar">G</div><div class="name">Gathresh</div><div class="id">SE24UCAM004</div></div>
+      <div class="member"><div class="avatar">MS</div><div class="name">Mehek Shaik</div><div class="id">SE24UCAM001</div></div>
+      <div class="member"><div class="avatar">RA</div><div class="name">R. Akshara</div><div class="id">SE24UCAM037</div></div>
+      <div class="member"><div class="avatar">NA</div><div class="name">N. Aakrusha Rao</div><div class="id">SE24UCAM015</div></div>
+      <div class="member"><div class="avatar">AV</div><div class="name">Ashish Varma</div><div class="id">SE24UMEC009</div></div>
+      <div class="member" style="background: var(--paper-2); border-style: dashed;">
+        <div class="avatar" style="background: var(--accent);">B.Tech</div>
+        <div class="name">2nd Year</div>
+        <div class="id">Mahindra University</div>
+      </div>
+
+      <div class="mentor-card">
+        <div class="avatar">A</div>
+        <div>
+          <div class="label">Faculty Mentor</div>
+          <div class="name">Abhishek</div>
+          <div class="role">Guiding the Kernel Crew through the design thinking journey.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div>
+      <div class="big-title">Travel Light, Travel Right!</div>
+      <p style="margin-top: 10px;">A design thinking project rethinking luggage in Indian Railway coaches — by Team Kernel Crew, 2026.</p>
+    </div>
+    <div>
+      <h4>Team</h4>
+      <p>Abhipsha · Sparshitha · Gathresh · Mehek · Akshara · Aakrusha · Ashish</p>
+    </div>
+    <div>
+      <h4>Mentor</h4>
+      <p>Abhishek</p>
+      <h4 style="margin-top: 18px;">Institution</h4>
+      <p>Mahindra University · B.Tech 2nd Year</p>
+    </div>
+  </div>
+  <div class="container">
+    <div class="copy">© 2026 Team Kernel Crew · Design Thinking Project</div>
+  </div>
+</footer>
+
+<script>
+  // Reveal animations
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('section, .ed-card, .pain-item, .why-item, .hmw-mini, .idea, .flow-step, .member').forEach(el => {
+    el.classList.add('reveal'); io.observe(el);
+  });
+
+  // Progress bar
+  const pb = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const scrolled = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+    pb.style.width = scrolled + '%';
+  });
+</script>
+
+</body>
+</html>
